@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>后台管理系统</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://cdn.bootcss.com/ionicons/4.1.2/css/ionicons.min.css" rel="stylesheet" />
+    <link href="/static/adminlte/css/AdminLTE.css" rel="stylesheet" />
+    <link href="/static/adminlte/css/skins/_all-skins.css" rel="stylesheet" />
+    <link href="/static/common/css/admin.css" rel="stylesheet" />
+    {% block css %}{% endblock %}
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+    {% block main %}
+    {% endblock %}
+
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/static/adminlte/js/adminlte.min.js"></script>
+    {% block js %}{% endblock %}
+    <script>
+      $(document).ready(function () {
+        $('.sidebar-menu').tree()
+      })
+    </script>
+</body>
+</html>

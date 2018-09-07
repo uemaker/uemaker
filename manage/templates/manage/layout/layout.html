@@ -1,0 +1,30 @@
+{% extends 'manage/layout/base.html' %}
+
+{% block main %}
+
+    <div class="wrapper">
+        {% include 'manage/layout/header.html' %}
+
+        {% include 'manage/layout/slider.html' %}
+
+        <div class="content-wrapper">
+            {% include 'manage/layout/breadcrumb.html' %}
+
+            <section class="content">
+                {% block content %}{% endblock %}
+            </section>
+        </div>
+
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+              <b>Version</b> 2.4.0
+            </div>
+            <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+            reserved.
+          </footer>
+
+        {% include 'manage/layout/controller_slider.html' %}
+
+    </div>
+
+{% endblock %}
