@@ -90,11 +90,13 @@ class CategoryListView(ListView):
     paginate_by = 2
 
     def post(self, request):
-        id_list = request.POST.getlist('id_list[]')
+        id = request.POST.getlist('id')
         data = {}
-        if id_list:
-            idstring = ','.join(id_list)
-            Category.objects.extra(where=['id IN ('+ idstring +')']).delete()
+
+        if id:
+            Category.objects.get(id=id).delete()
+            # idstring = ','.join(id_list)
+            # Category.objects.extra(where=['id IN ('+ idstring +')']).delete()
             data['success'] = 1
         else:
             data['success'] = 0

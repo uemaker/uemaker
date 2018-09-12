@@ -30,9 +30,9 @@
                     <table id="example2" class="table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" value="1" id="all" name="all"/>全选</th>
-                            <th>分类ID</th>
-                            <th>分类名称</th>
+                            <th style="width: 5%;">分类ID</th>
+                            <th style="width: 50%;">分类名称</th>
+                            <th>所属模块</th>
                             <th>排序</th>
                             <th>操作</th>
                         </tr>
@@ -40,11 +40,12 @@
                         <tbody>
                         {% for item in data %}
                             <tr>
-                                <td><input type="checkbox" value="{{ item.id }}" name="id_list"/></td>
                                 <td>{{ item.id }}</td>
-                                <td>{{ item.name }}</td>
+                                <td>{{ item.title }}</td>
+                                <td>{{ item.module.title }}</td>
                                 <td>{{ item.sort }}</td>
                                 <td><a href="{% url 'edit_category' item.id %}">编辑</a></td>
+                                <td><a class="del_btn" data_id="{{ item.id }}" href="javascript:void(0);">删除</a></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -106,27 +107,17 @@
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
 
-        $(function () {
-            $("#all").change(function (e) {
-                if (this.checked) {
-                    $("input[name=id_list]:checkbox").prop("checked", true);
-                } else {
-                    $("input[name=id_list]:checkbox").prop("checked", false);
-                }
-            });
-            $("#btn_remove").click(function () {
-                var ids = [];
-                $('input:checkbox[name="id_list"]:checked').each(function (i) {
-                    ids[i] = $(this).val();
-                });
-                if (ids.length == 0) {
+        $(function(){
+            $('.del_btn').click(function (e) {
+                var id = $(this).attr('data_id');
+                if (!id) {
                     $.ueDialog().alert("请选择要删除的模块！")
                 } else {
                     $.ueDialog().confirm('确定要删除所选模块？', function () {
                         $.ajax({
                             type: 'POST',
                             url: '{{ form_url }}',
-                            data: {id_list: ids},
+                            data: {id: id},
                             beforeSend: function (xhr, settings) {
                                 var csrftoken = getCookie('csrftoken');
                                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
@@ -148,8 +139,8 @@
                     })
 
                 }
-
             })
         });
+
     </script>
 {% endblock %}
