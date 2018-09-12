@@ -35,7 +35,7 @@
           </a>
           <ul class="treeview-menu" {% if request.path|url_match:"system" %}style="display:block;"{% endif %}>
             <li {% if request.path|url_match:"system/modules/" %}class="active"{% endif %}><a href="{% url 'modules' %}"><i class="fa fa-circle-o"></i> 模块管理</a></li>
-            <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> 分类管理</a></li>
+            <li {% if request.path|url_match:"system/categories/" %}class="active"{% endif %}><a href="{% url 'categories' %}"><i class="fa fa-circle-o"></i> 分类管理</a></li>
           </ul>
         </li>
 

@@ -19,6 +19,9 @@ from . import views
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^system/modules/$', views.ModuleListView.as_view(), name='modules'),
-    url(r'^system/add_module/$', views.module_add, name='add_module'),
-    url(r'^system/edit_module/(?P<id>\d+)/$', views.module_edit, name='edit_module'),
+    url(r'^system/add_module/$', views.ModuleCreateView.as_view(), name='add_module'),
+    url(r'^system/edit_module/(?P<pk>\d+)/$', views.ModuleUpdateView.as_view(), name='edit_module'),
+    url(r'^system/categories/$', views.CategoryListView.as_view(), name='categories'),
+    url(r'^system/add_category/$', views.CategoryCreateView.as_view(), name='add_category'),
+    url(r'^system/edit_category/(?P<pk>\d+)/$', views.CategoryUpdateView.as_view(), name='edit_category'),
 ]

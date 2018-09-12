@@ -1,15 +1,17 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.base import View
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
-from django.shortcuts import render
-from manage.models import Module
-from manage.forms import ModuleAddForm
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse
 from django.db.models import Q
 import json
-from django.http import HttpResponse
+
+from manage.models import Module
+from manage.models import Category
+from manage.forms import ModuleAddForm
+from manage.forms import CategoryAddForm
 
 class IndexView(TemplateView):
 
@@ -23,7 +25,7 @@ class ModuleListView(ListView):
     # model = Module
     template_name = 'manage/system/module_list.html'
     context_object_name = "modules"
-    paginate_by = 2
+    paginate_by = 100
 
     def post(self, request):
         id_list = request.POST.getlist('id_list[]')
@@ -50,40 +52,95 @@ class ModuleListView(ListView):
         context['q'] = self.request.GET.get('q', '')
         return context
 
-def module_add(request):
-    context = {}
-    context['form_url'] = reverse('add_module')
-    context['form_title'] = '创建模块'
+class ModuleCreateView(CreateView):
+    template_name = 'manage/system/create_form.html'
+    form_class = ModuleAddForm
+    success_url = 'modules'
 
-    if request.method == 'POST':
-        form = ModuleAddForm(request.POST)
-        context['form'] = form
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/manage/system/modules/")
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse(self.success_url))
+
+    def get_context_data(self, **kwargs):
+        context = super(ModuleCreateView, self).get_context_data(**kwargs)
+        context['form_url'] = reverse('add_module')
+        context['form_title'] = '创建模块'
+        return context
+
+class ModuleUpdateView(UpdateView):
+    model = Module
+    template_name = 'manage/system/create_form.html'
+    form_class = ModuleAddForm
+    success_url = 'modules'
+
+    def get_context_data(self, **kwargs):
+        context = super(ModuleUpdateView, self).get_context_data(**kwargs)
+        context['form_url'] = reverse('edit_module', kwargs={'pk': self.kwargs.get(self.pk_url_kwarg)})
+        context['form_title'] = '编辑模块'
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse(self.success_url))
+
+class CategoryListView(ListView):
+    # model = Module
+    template_name = 'manage/system/category_list.html'
+    context_object_name = "data"
+    paginate_by = 2
+
+    def post(self, request):
+        id_list = request.POST.getlist('id_list[]')
+        data = {}
+        if id_list:
+            idstring = ','.join(id_list)
+            Category.objects.extra(where=['id IN ('+ idstring +')']).delete()
+            data['success'] = 1
         else:
-            return render(request, 'manage/system/module_add.html', context)
+            data['success'] = 0
 
-    context['form'] = ModuleAddForm()
-    return render(request, 'manage/system/module_add.html', context)
+        return HttpResponse(json.dumps(data), content_type="application/json")
 
-def module_edit(request, id):
-    context = {}
-    context['id'] = id
-    context['form_url'] = reverse('edit_module', args=[id])
-    context['form_title'] = '编辑模块'
-    model = Module.objects.filter(id=id).first()
+    def get_queryset(self):
+        listdata = Category.objects.all()
+        keyword = self.request.GET.get('q')
+        if keyword:
+            listdata = listdata.filter(Q(name__icontains=keyword)|Q(title__icontains=keyword))
+        return listdata
 
-    if request.method == 'POST':
-        form = ModuleAddForm(request.POST, instance=model)
-        context['form'] = form
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(context['form_url'])
-        else:
-            return render(request, 'manage/system/module_add.html', context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CategoryListView, self).get_context_data(**kwargs)
+        context['form_url'] = reverse('categories')
+        context['q'] = self.request.GET.get('q', '')
+        return context
 
-    form = ModuleAddForm(instance=model)
-    context['form'] = form
-    return render(request, 'manage/system/module_add.html', context)
+class CategoryCreateView(CreateView):
+    form_class = CategoryAddForm
+    template_name = 'manage/system/create_form.html'
+    success_url = 'categories'
 
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse(self.success_url))
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryCreateView, self).get_context_data(**kwargs)
+        context['form_url'] = reverse('add_category')
+        context['form_title'] = '创建分类'
+        return context
+
+class CategoryUpdateView(UpdateView):
+    model = Category
+    form_class = CategoryAddForm
+    template_name = 'manage/system/create_form.html'
+    success_url = 'categories'
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryUpdateView, self).get_context_data(**kwargs)
+        context['form_url'] = reverse('edit_category', kwargs={'pk': self.kwargs.get(self.pk_url_kwarg)})
+        context['form_title'] = '编辑分类'
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse(self.success_url))
