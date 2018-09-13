@@ -15,10 +15,16 @@
                     <div class="box-body">
                         {% for field in form %}
                           <div class="form-group clearfix">
-                             <div class="col-xs-12 col-md-6 col-lg-3">
-                              {{ field.label_tag }}
-                                {{ field }}
-                             {{ field.errors }}
+                             <div class="col-xs-12 col-md-6 col-lg-6">
+                                {% if not field.is_hidden %}
+                                    {{ field.label_tag }}
+                                {% endif %}
+                                 {{ field }}
+                                {% if not field.is_hidden %}
+                                    {{ field.help_text }}
+                                    {{ field.errors }}
+                                {% endif %}
+
                              </div>
                           </div>
                          {% endfor %}

@@ -18,10 +18,15 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^demo/$', views.DemoView.as_view(), name='demo'),
     url(r'^system/modules/$', views.ModuleListView.as_view(), name='modules'),
     url(r'^system/add_module/$', views.ModuleCreateView.as_view(), name='add_module'),
     url(r'^system/edit_module/(?P<pk>\d+)/$', views.ModuleUpdateView.as_view(), name='edit_module'),
+    url(r'^system/fields/(?P<mid>\d+)/$', views.FieldListView.as_view(), name='fields'),
+    url(r'^system/add_field/(?P<mid>\d+)/$', views.FieldCreateView.as_view(), name='add_field'),
+    url(r'^system/edit_field/(?P<pk>\d+)/$', views.FieldUpdateView.as_view(), name='edit_field'),
     url(r'^system/categories/$', views.CategoryListView.as_view(), name='categories'),
     url(r'^system/add_category/$', views.CategoryCreateView.as_view(), name='add_category'),
     url(r'^system/edit_category/(?P<pk>\d+)/$', views.CategoryUpdateView.as_view(), name='edit_category'),
+    url(r'^system/item/(?P<module_name>\w+)/$', views.ItemCreateView.as_view(), name='item'),
 ]
