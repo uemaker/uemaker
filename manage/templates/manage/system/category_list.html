@@ -112,7 +112,6 @@
         $(function(){
             $('.del_btn').click(function (e) {
                 var id = $(this).attr('data_id');
-                console.log(id);
                 if (id) {
                     $.ueDialog().confirm('删除分类将删除分类下所有的文档，确定要删除吗？', function () {
                         $.ajax({

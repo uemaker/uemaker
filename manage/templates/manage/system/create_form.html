@@ -10,7 +10,7 @@
                 </div>
                 <!-- /.box-header -->
 
-                <form role="form" method="post" action="{{ form_url }}">
+                <form role="form" method="post" action="{{ form_url }}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="box-body">
                         {% for field in form %}
@@ -42,4 +42,9 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block head_js %}
+    <script type="text/javascript" src="/static/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="/static/ueditor/ueditor.all.js"></script>
 {% endblock %}

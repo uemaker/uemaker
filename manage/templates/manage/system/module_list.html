@@ -118,12 +118,14 @@
         }
 
         $(function () {
-            $("#all").change(function (e) {
-                if (this.checked) {
-                    if(!this.is('disabled')){
-                        $("input[name=id_list]:checkbox").prop("checked", true);
-                    }
-                } else {
+            $("#all").change(function (e){
+                if(this.checked){
+                    $("input[name=id_list]:checkbox").each(function () {
+                        if(!$(this).prop("disabled")){
+                            $(this).prop("checked", true);
+                        }
+                    });
+                }else {
                     $("input[name=id_list]:checkbox").prop("checked", false);
                 }
             });

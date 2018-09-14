@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Q
 from manage.models import Module
 from manage.models import Category
 from manage.models import ModuleField
@@ -26,7 +27,7 @@ class ModuleUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Module
-        fields = ['name', 'title', 'desc']
+        fields = ['name','title', 'desc']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'title': forms.TextInput(attrs={'class': 'form-control'},),
@@ -64,6 +65,18 @@ class ModuleFieldForm(forms.ModelForm):
             'name': '只允许输入英文字母和下划线，最长为20个字符',
             'value': 'select选项，每行一个选项，最长为200个字符',
         }
+
+    def clean(self):
+        is_insert = self.instance.pk is None
+        name = self.cleaned_data.get('name')
+        module_id = self.cleaned_data.get('module_id')
+        if is_insert:
+            count = ModuleField.objects.filter(module_id=module_id, name=name).count()
+        else:
+            count = ModuleField.objects.filter(module_id=module_id, name=name).filter(~Q(id=self.instance.pk)).count()
+        if count > 0:
+            self.add_error("name", name+"已存在")
+        return self.cleaned_data
 
     def __init__(self, *args, **kwargs):
         module_id = kwargs.pop('module_id', None)

@@ -239,6 +239,6 @@ class FieldUpdateView(UpdateView):
     def form_valid(self, form):
         if form.is_valid:
             form.save()
-            return HttpResponseRedirect(reverse(self.success_url))
+            return HttpResponseRedirect(reverse(self.success_url, kwargs={'mid': form.data.get('module_id')}))
 
         return super(FieldUpdateView, self).form_valid(form)

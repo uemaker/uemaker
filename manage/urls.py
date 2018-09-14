@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^system/categories/$', views.CategoryListView.as_view(), name='categories'),
     url(r'^system/add_category/$', views.CategoryCreateView.as_view(), name='add_category'),
     url(r'^system/edit_category/(?P<pk>\d+)/$', views.CategoryUpdateView.as_view(), name='edit_category'),
-    url(r'^system/item/(?P<module_name>\w+)/$', views.ItemCreateView.as_view(), name='item'),
+    url(r'^module/add_item/(?P<module_name>\w+)/$', views.ItemCreateView.as_view(), name='add_item'),
+    url(r'^module/add_article/$', views.ArticleCreateView.as_view(), name='add_article'),
 ]

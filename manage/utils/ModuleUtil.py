@@ -13,3 +13,7 @@ class ModuleUtil(object):
                 modules[mod['name']] = mod
 
         return modules
+
+    @staticmethod
+    def getModuleId(module_name):
+        return Module.objects.get(name=module_name).id
