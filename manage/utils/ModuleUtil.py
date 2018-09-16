@@ -1,8 +1,15 @@
 from manage.models import Module
-import json
-from django.forms.models import model_to_dict
+
 
 class ModuleUtil(object):
+
+    @staticmethod
+    def getMatrixs():
+        return {'article': '文章', 'product': '商品'}
+
+    @staticmethod
+    def matrixIsExists(matrix):
+        return True if ModuleUtil.getMatrixs().get(matrix, None) else False
 
     @staticmethod
     def getModules():
@@ -16,4 +23,4 @@ class ModuleUtil(object):
 
     @staticmethod
     def getModuleId(module_name):
-        return Module.objects.get(name=module_name).id
+        return getattr(Module.objects.get(name=module_name), 'id', 0) if module_name else 0
