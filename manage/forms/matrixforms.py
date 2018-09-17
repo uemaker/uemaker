@@ -1,172 +1,17 @@
 import datetime
-import decimal
 import os
 import random
 
-from DjangoUeditor.widgets import UEditorWidget
 from PIL import Image
-from django import forms
 from django.conf import settings
 
 from manage.models import FieldItem, Article, ArticleContent
-from manage.utils import FieldUtil, ModuleUtil, CategoryUtil
+from manage.utils import CategoryUtil
+from .baseform import *
 
 
-class ArticleForm(forms.ModelForm):
+class ArticleForm(BaseModelForm):
     extraFields = {}
-
-    def createField(self, field=None):
-        print(field)
-        blank = field['blank']
-        if field['type'] == FieldUtil.FIELD_TEXT:
-            self.fields[field['name']] = forms.CharField(
-                label=field['title'],
-                max_length=int(field['length']),
-                required=blank,
-                initial=field['default'],
-                help_text=field['help_text'],
-                widget=forms.TextInput(
-                    attrs={'class': 'form-control'},
-                )
-            )
-        elif field['type'] == FieldUtil.FIELD_TEXTAREA:
-            self.fields[field['name']] = forms.CharField(
-                label=field['title'],
-                max_length=int(field['length']),
-                required=blank,
-                initial=field['default'],
-                help_text=field['help_text'],
-                widget=forms.Textarea(
-                    attrs={'class': 'form-control'},
-                )
-
-            )
-        elif field['type'] == FieldUtil.FIELD_EDITOR:
-            self.fields[field['name']] = forms.CharField(
-                label=field['title'],
-                max_length=int(field['length']),
-                required=blank,
-                initial=field['default'],
-                help_text=field['help_text'],
-                widget=UEditorWidget(
-                    attrs={'width': '100%', 'height': 400, 'imagePath': 'upload/images/', 'filePath': 'upload/files/',
-                           'toolbars': [
-                               ['fullscreen', 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline',
-                                'fontborder', 'strikethrough',
-                                'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote',
-                                'pasteplain', '|',
-                                'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', '|',
-                                'simpleupload', 'insertimage', 'emotion', 'insertvideo', 'music', 'attachment', 'map',
-                                'gmap',
-                                'insertcode', 'webapp', 'pagebreak', 'template', '|', 'selectall', 'cleardoc']]
-                           })
-            )
-        elif field['type'] == FieldUtil.FIELD_NUMBER:
-            self.fields[field['name']] = forms.CharField(
-                label=field['title'],
-                max_length=int(field['length']),
-                required=blank,
-                initial=int(field['default']),
-                help_text=field['help_text'],
-                widget=forms.NumberInput(
-                    attrs={'class': 'form-control'},
-                )
-
-            )
-        elif field['type'] == FieldUtil.FIELD_SELECT:
-            self.fields[field['name']] = forms.ChoiceField(
-                label=field['title'],
-                required=blank,
-                initial=field['default'],
-                help_text=field['help_text'],
-                widget=forms.Select(
-                    attrs={'class': 'form-control'},
-                )
-            )
-            self.fields[field['name']].choices = FieldUtil.getOptions(field['value'])
-        elif field['type'] == FieldUtil.FIELD_CHECKBOX:
-            self.fields[field['name']] = forms.BooleanField(
-                label=field['title'],
-                required=blank,
-                initial=field['default'],
-                help_text=field['help_text'],
-                widget=forms.CheckboxInput(
-                )
-
-            )
-        elif field['type'] == FieldUtil.FIELD_RADIO:
-            self.fields[field['name']] = forms.BooleanField(
-                label=field['title'],
-                required=blank,
-                initial=int(field['default']),
-                help_text=field['help_text'],
-                widget=forms.RadioSelect(
-                    attrs={},
-                )
-
-            )
-        elif field['type'] == FieldUtil.FIELD_IMAGE:
-            self.fields[field['name']] = forms.ImageField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-            )
-        elif field['type'] == FieldUtil.FIELD_FILE:
-            self.fields[field['name']] = forms.FileField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-            )
-        elif field['type'] == FieldUtil.FIELD_DATETIME:
-            self.fields[field['name']] = forms.DateTimeField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-            )
-        elif field['type'] == FieldUtil.FIELD_DATE:
-            self.fields[field['name']] = forms.DateField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-            )
-        elif field['type'] == FieldUtil.FIELD_TIME:
-            self.fields[field['name']] = forms.TimeField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-            )
-        elif field['type'] == FieldUtil.FIELD_EMAIL:
-            self.fields[field['name']] = forms.EmailField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-                initial=field['default'],
-                widget=forms.ClearableFileInput(
-                    attrs={'class': 'form-control'},
-                )
-            )
-        elif field['type'] == FieldUtil.FIELD_DECIMAL:
-            default = field['default'] if decimal.Decimal(field['default']) else None
-            self.fields[field['name']] = forms.DecimalField(
-                label=field['title'],
-                required=blank,
-                help_text=field['help_text'],
-                initial=default,
-                widget=forms.NumberInput(
-                    attrs={'class': 'form-control'},
-                )
-            )
-        elif field['type'] == FieldUtil.FIELD_FLOAT:
-            default = field['default'] if float(field['default']) else None
-            self.fields[field['name']] = forms.FloatField(
-                label=field['title'],
-                required=blank,
-                help_text=default,
-                initial=float(field['default']),
-                widget=forms.NumberInput(
-                    attrs={'class': 'form-control'},
-                )
-            )
 
     def saveField(self, article_id):
         if article_id:
@@ -216,10 +61,10 @@ class ArticleForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        extra_data = kwargs.pop('extra_data', None)
+        module = kwargs.pop('module', None)
         super(ArticleForm, self).__init__(*args, **kwargs)
-        module_name = 'article'
-        module_id = ModuleUtil.getModuleId(module_name)
+        module_name = module.get('name')
+        module_id = module.get('id')
 
         '''分类下拉列表'''
         self.fields['cat_id'] = forms.ChoiceField(label=u'文章分类', widget=forms.Select(attrs={'class': 'form-control'}))
@@ -245,7 +90,7 @@ class ArticleForm(forms.ModelForm):
         ))
 
         '''自定义字段处理'''
-        self.extraFields = FieldUtil.getModuleFields(extra_data['id']).values()
+        self.extraFields = FieldUtil.getModuleFields(module_id).values()
         if len(self.extraFields):
             for field in self.extraFields:
                 self.createField(field)

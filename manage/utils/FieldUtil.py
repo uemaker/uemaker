@@ -1,4 +1,8 @@
+import operator
+
 from manage.models import ModuleField
+
+from django.apps import apps
 
 class FieldUtil(object):
 
@@ -58,3 +62,12 @@ class FieldUtil(object):
             for item in tmparr:
                 options.append(item.split('=', 1))
         return options
+
+    @staticmethod
+    def getmodelfields(model, use_fields):
+        _fileds = model._meta.fields
+        fileds = {}
+        params = [f for f in _fileds if f.name in use_fields]
+        for i in params:
+            fileds[i.name] = i.verbose_name
+        return fileds

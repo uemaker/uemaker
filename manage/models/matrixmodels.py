@@ -3,7 +3,35 @@ from django.utils import timezone
 from .basemodel import *
 
 
-class Article(BaseModel):
+class BaseMatrixModel(BaseModel):
+
+    @property
+    def id(self):
+        raise NotImplementedError("field id is not exists.")
+
+    @property
+    def title(self):
+        raise NotImplementedError("field title is not exists.")
+
+    @property
+    def sort(self):
+        raise NotImplementedError("field sort is not exists.")
+
+    @staticmethod
+    def list_fields():
+        raise NotImplementedError("list_fields is not implemented.")
+
+    class Meta:
+        app_label = 'manage'
+        abstract = True
+
+
+class Article(BaseMatrixModel):
+
+    @staticmethod
+    def list_fields():
+        return ['id', 'cat_id', 'title', 'sort', 'status',  'create_time']
+
     id = models.BigAutoField(primary_key=True)
     cat_id = models.IntegerField(u"分类ID")
     title = models.CharField(u"标题", max_length=100, error_messages={'required': u'请输入标题', 'max_length': u'标题最长为100个字符'})
@@ -16,6 +44,7 @@ class Article(BaseModel):
     pub_time = models.DateTimeField(u"发表时间", default=timezone.now)
     create_time = models.DateTimeField(u"创建时间", default=timezone.now)
     update_time = models.DateTimeField(u"更新时间", auto_now=True)
+    sort = models.IntegerField(u"排序", blank=True, default=0)
 
     class Meta(BaseModel.Meta):
         db_table = 'article'

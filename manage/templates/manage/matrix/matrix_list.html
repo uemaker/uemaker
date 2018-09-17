@@ -31,18 +31,25 @@
                         <thead>
                         <tr>
                             <th style="width: 60px;"><input type="checkbox" value="1" id="all" name="all"/>全选</th>
-                            <th>字段名称</th>
-                            <th>字段说明</th>
-                            <th>字段类型</th>
-                            <th>字段长度</th>
-                            <th>是否必填</th>
-                            <th>默认值</th>
-                            <th>排序</th>
+                            {% for key, value in fields.items %}
+                            <th>{{ value }}</th>
+                            {% endfor %}
                             <th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
+                            {% for item in data %}
+                                <tr>
+                                    <td></td>
+                                    {% for key, value in fields.items %}
+                                        <td>{{ item.key }}</td>
+                                    {% endfor %}
 
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
                         </tbody>
 
                     </table>

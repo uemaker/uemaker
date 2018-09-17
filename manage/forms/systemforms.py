@@ -12,7 +12,7 @@ class ModuleForm(forms.ModelForm):
 
     class Meta:
         model = Module
-        fields = ['name', 'title', 'desc']
+        fields = ['matrix', 'name', 'title', 'desc']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'title': forms.TextInput(attrs={'class': 'form-control'},),
@@ -33,6 +33,13 @@ class ModuleForm(forms.ModelForm):
         super(ModuleForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         is_update = True if instance and instance.pk else False
+        self.fields['matrix'] = forms.ChoiceField(
+            label=u'模型',
+            widget=forms.Select(attrs={'class': 'form-control', },),
+            disabled=is_update,
+            help_text='所属内容模型',
+        )
+        self.fields['matrix'].choices = ModuleUtil.getMatrixs().items()
         self.fields['name'] = forms.CharField(
             label=u'模块标识',
             widget=forms.TextInput(attrs={'class': 'form-control'}, ),
