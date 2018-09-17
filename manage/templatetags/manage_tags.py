@@ -31,3 +31,7 @@ def field_type_text(filed_type):
         return types.get(filed_type)
     else:
         return filed_type
+
+@register.filter()
+def field_val(item, key):
+    return item.get(key)

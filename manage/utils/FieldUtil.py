@@ -1,6 +1,6 @@
 import operator
 
-from manage.models import ModuleField
+from manage.models import ModuleField, FieldItem
 
 from django.apps import apps
 
@@ -71,3 +71,14 @@ class FieldUtil(object):
         for i in params:
             fileds[i.name] = i.verbose_name
         return fileds
+
+    @staticmethod
+    def getItems(module_id, object_id):
+        items = {}
+        result = FieldItem.objects.filter(module_id=module_id, object_id=object_id).values()
+
+        for item in result:
+            items[item['field_id']] = item
+
+        return items
+

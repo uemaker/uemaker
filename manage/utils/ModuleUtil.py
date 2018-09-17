@@ -1,4 +1,4 @@
-from manage.models import Module
+from manage.models import Module, Category
 
 
 class ModuleUtil(object):
@@ -24,3 +24,7 @@ class ModuleUtil(object):
     @staticmethod
     def getModuleId(module_name):
         return getattr(Module.objects.get(name=module_name), 'id', 0) if module_name else 0
+
+    @staticmethod
+    def getModuleIdByCatId(cat_id):
+        return Category.objects.only('module_id').get(id=cat_id).module_id

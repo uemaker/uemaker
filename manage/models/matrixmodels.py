@@ -1,37 +1,32 @@
 from django.utils import timezone
 
+from manage.utils import ModuleUtil
 from .basemodel import *
+from .systemmodels import FieldItem
 
 
-class BaseMatrixModel(BaseModel):
-
-    @property
-    def id(self):
-        raise NotImplementedError("field id is not exists.")
+class BaseMatrixModel(object):
 
     @property
-    def title(self):
-        raise NotImplementedError("field title is not exists.")
+    def list_fields(self):
+        raise NotImplementedError("list_fields is not implemented.")
 
-    @property
-    def sort(self):
-        raise NotImplementedError("field sort is not exists.")
-
-    @staticmethod
-    def list_fields():
+    def delete_object(self, id):
         raise NotImplementedError("list_fields is not implemented.")
 
     class Meta:
-        app_label = 'manage'
         abstract = True
 
 
-class Article(BaseMatrixModel):
+class Article(BaseModel, BaseMatrixModel):
 
-    @staticmethod
-    def list_fields():
-        return ['id', 'cat_id', 'title', 'sort', 'status',  'create_time']
+    def delete_object(self):
+        ArticleContent.objects.filter(id=self.id).delete()
+        module_id = ModuleUtil.getModuleIdByCatId(self.cat_id)
+        FieldItem.objects.filter(module_id=module_id, object_id=self.id).delete()
+        self.delete()
 
+    list_fields = ['id', 'cat_id', 'title', 'sort', 'status', 'create_time']
     id = models.BigAutoField(primary_key=True)
     cat_id = models.IntegerField(u"分类ID")
     title = models.CharField(u"标题", max_length=100, error_messages={'required': u'请输入标题', 'max_length': u'标题最长为100个字符'})

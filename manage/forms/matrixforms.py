@@ -11,14 +11,14 @@ from .baseform import *
 
 
 class ArticleForm(BaseModelForm):
-    extraFields = {}
+    extra_fields = {}
 
     def saveField(self, article_id):
         if article_id:
             content = ArticleContent(id=article_id, content=self.cleaned_data['content'])
             content.save()
-            if len(self.extraFields):
-                for field in self.extraFields:
+            if len(self.extra_fields):
+                for field in self.extra_fields:
                     if field['type'] == FieldUtil.FIELD_IMAGE or field['type'] == FieldUtil.FIELD_FILE:
                         ext_name = os.path.splitext(self.cleaned_data[field['name']].name)[1]
                         nowTime = datetime.now().strftime("%Y%m%d%H%M%S")  # 生成当前的时间
@@ -63,6 +63,8 @@ class ArticleForm(BaseModelForm):
     def __init__(self, *args, **kwargs):
         module = kwargs.pop('module', None)
         super(ArticleForm, self).__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        is_update = True if instance and instance.pk else False
         module_name = module.get('name')
         module_id = module.get('id')
 
@@ -75,8 +77,14 @@ class ArticleForm(BaseModelForm):
         self.fields['cover'] = forms.ImageField(label=u'封面', required=False)
 
         '''文章内容'''
+        content = ''
+        extra_items = {}
+        if is_update:
+            content = ArticleContent.objects.only('content').get(id=instance.id).content
+            extra_items = FieldUtil.getItems(module_id, instance.id)
+
         # self.fields['content'] = forms.CharField(label=u'内容', widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 20}))
-        self.fields['content'] = forms.CharField(label=u'内容', widget=UEditorWidget(
+        self.fields['content'] = forms.CharField(label=u'内容', initial=content, widget=UEditorWidget(
             attrs={'width': '100%', 'height': 400, 'imagePath': 'upload/images/', 'filePath': 'upload/files/',
                    'toolbars': [[
                        'fullscreen', 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder',
@@ -86,14 +94,16 @@ class ArticleForm(BaseModelForm):
                        'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', '|',
                        'simpleupload', 'insertimage', 'emotion', 'insertvideo', 'music', 'attachment', 'map', 'gmap',
                        'insertcode', 'webapp', 'pagebreak', 'template', '|', 'selectall', 'cleardoc'
-                   ]]}
+                   ]]},
         ))
 
         '''自定义字段处理'''
-        self.extraFields = FieldUtil.getModuleFields(module_id).values()
-        if len(self.extraFields):
-            for field in self.extraFields:
-                self.createField(field)
+        self.extra_fields = FieldUtil.getModuleFields(module_id).values()
+        if len(self.extra_fields):
+            for field in self.extra_fields:
+                extra_item = extra_items.get(field.get('id')) if extra_items else None
+                extra_val = extra_item.get('content') if extra_item else None
+                self.createField(field, extra_val, is_update)
 
     def clean(self):
         is_insert = self.instance.pk is None

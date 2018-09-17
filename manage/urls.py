@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^module/(?P<module_name>\w+)/category/edit/(?P<pk>\d+)/$', views.CategoryUpdateView.as_view(), name='edit_category'),
     url(r'^module/(?P<module_name>\w+)/list/$', views.MatrixListView.as_view(), name='matrix'),
     url(r'^module/(?P<module_name>\w+)/add/$', views.MatrixCreateView.as_view(), name='add_matrix'),
+    url(r'^module/(?P<module_name>\w+)/edit/(?P<pk>\d+)/$', views.MatrixUpdateView.as_view(), name='edit_matrix'),
 ]
