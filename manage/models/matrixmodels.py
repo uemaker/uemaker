@@ -11,20 +11,23 @@ class BaseMatrixModel(object):
     def list_fields(self):
         raise NotImplementedError("list_fields is not implemented.")
 
-    def delete_object(self, id):
-        raise NotImplementedError("list_fields is not implemented.")
-
     class Meta:
         abstract = True
 
 
-class Article(BaseModel, BaseMatrixModel):
+class ArticleManager(models.Manager):
 
-    def delete_object(self):
-        ArticleContent.objects.filter(id=self.id).delete()
-        module_id = ModuleUtil.getModuleIdByCatId(self.cat_id)
-        FieldItem.objects.filter(module_id=module_id, object_id=self.id).delete()
-        self.delete()
+    def delete(self, id):
+        article = Article.objects.filter(id=id).first()
+        if article:
+            ArticleContent.objects.filter(id=article.id).delete()
+            module_id = ModuleUtil.getModuleIdByCatId(article.cat_id)
+            if module_id:
+                FieldItem.objects.filter(module_id=module_id, object_id=article.pk).delete()
+            article.delete()
+
+
+class Article(BaseModel, BaseMatrixModel):
 
     list_fields = ['id', 'cat_id', 'title', 'sort', 'status', 'create_time']
     id = models.BigAutoField(primary_key=True)
@@ -41,6 +44,8 @@ class Article(BaseModel, BaseMatrixModel):
     update_time = models.DateTimeField(u"更新时间", auto_now=True)
     sort = models.IntegerField(u"排序", blank=True, default=0)
 
+    objects = ArticleManager()
+
     class Meta(BaseModel.Meta):
         db_table = 'article'
         verbose_name = '文章'
@@ -55,3 +60,6 @@ class ArticleContent(BaseModel):
         db_table = 'article_content'
         verbose_name = '内容'
         verbose_name_plural = '内容列表'
+
+
+

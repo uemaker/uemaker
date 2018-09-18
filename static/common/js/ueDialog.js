@@ -34,7 +34,6 @@
                 .modal('show')
                 //隐藏窗口后删除窗口html
                 .on('hidden.bs.modal', function () {
-                    console.log(3333);
                     modal.remove();
                     $(".modal-backdrop").remove();
                     if (opts.closeEvent) {

@@ -31,10 +31,10 @@ class MatrixListView(ListView):
         model = self.get_model()
         data = {}
         id_list = request.POST.getlist('id_list[]')
-        print(id_list)
+        print(model)
         if id_list:
             for id in id_list:
-                model(id=id).delete_object()
+                model.objects.delete(id)
             data['success'] = 1
         else:
             data['success'] = 0
@@ -55,7 +55,7 @@ class MatrixListView(ListView):
     def get_context_data(self, **kwargs):
         context = super(MatrixListView, self).get_context_data(**kwargs)
         context['module_name'] = self.kwargs.get('module_name')
-        context['form_url'] = reverse('add_matrix', kwargs={'module_name': context['module_name']})
+        context['form_url'] = reverse('matrix', kwargs={'module_name': context['module_name']})
         context['form_title'] = '添加'
         return context
 

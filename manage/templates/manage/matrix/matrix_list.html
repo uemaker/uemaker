@@ -158,6 +158,7 @@
                     $.ueDialog().alert("请选择要删除的模块！")
                 } else {
                     $.ueDialog().confirm('删除模块将删除该模块下的所有分类及文章，确定要删除所选模块？', function () {
+                        console.log('{{ form_url }}')
                         $.ajax({
                             type: 'POST',
                             url: '{{ form_url }}',

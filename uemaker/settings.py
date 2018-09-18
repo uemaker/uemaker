@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'manage',
+    'rbac',
     'DjangoUeditor',
 ]
 # 设置 Crispy 的样式主题

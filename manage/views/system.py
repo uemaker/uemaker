@@ -17,15 +17,15 @@ from manage.models import Module
 from manage.models import ModuleField
 from manage.utils import FieldUtil
 from manage.utils import ModuleUtil
+from rbac import models
 
 
 class DemoView(View):
 
     def get(self, request, *args, **kwargs):
-        tree = FieldUtil.getFieldOptions()
-        modules = ModuleUtil.getModules()
+        models.User.objects.create_user('atao', '', '123456')
 
-        return HttpResponse(json.dumps(modules['article']))
+        return HttpResponse('{}')
 
 
 class IndexView(TemplateView):
