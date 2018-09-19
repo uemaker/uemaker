@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'rbac.middleware.auth.AuthMiddleware',
 ]
 
 ROOT_URLCONF = 'uemaker.urls'
@@ -79,6 +80,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'uemaker.wsgi.application'
+
+RBAC = {
+    'safe_urls': [
+        r'/login/',
+        '/manage/.*',
+        '^/rbac/',
+    ],
+}
 
 
 # Database
@@ -135,6 +144,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
+    'rbac/static/',
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')

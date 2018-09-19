@@ -1,0 +1,19 @@
+.login-wrap{
+    background: url("../img/login_backimg_4.jpg");
+    /*animation-name:back-anim;*/
+    /*animation-duration:12s;*/
+    /*animation-delay:5s;*/
+    /*animation-iteration-count:infinite;*/
+    /*animation-play-state:running;*/
+}
+@keyframes back-anim
+{
+    0%   {background:url("../img/login_backimg_1.jpg");}
+    34%  {background:url("../img/login_backimg_2.jpg");}
+    67%  {background:url("../img/login_backimg_3.jpg");}
+    100% {background:url("../img/login_backimg_4.jpg");}
+}
+.login-form{background: rgba(255,255,255,0.3);width:400px;margin:120px auto;}
+.login-form .fa{display: inline-block;top: 27px;left: 6px;position: relative;color: #ccc;}
+.login-form input[type="text"],input[type="password"]{padding-left:26px;}
+.login-form .checkbox{padding-left:21px;}

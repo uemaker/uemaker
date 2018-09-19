@@ -2,6 +2,7 @@ import unicodedata
 from django.db import models
 from django.contrib.auth import hashers
 
+
 # Create your models here.
 from django.utils import timezone
 
@@ -41,6 +42,15 @@ class UserManager(models.Manager):
         if extra_fields.get('is_super') is not True:
             raise ValueError('超级管理员必须设置is_super=True.')
         return self._create_user(username, email, password, **extra_fields)
+
+    def check_password(self, raw_password):
+
+        def setter(raw_password):
+            self.set_password(raw_password)
+            # Password hash upgrades shouldn't be considered password changes.
+            self._password = None
+            self.save(update_fields=["password"])
+        return hashers.check_password(raw_password, self.password, setter)
 
 
 class User(models.Model):
@@ -97,6 +107,15 @@ class User(models.Model):
         self.password = hashers.make_password(password)
         self._password = password
 
+    def check_password(self, raw_password):
+
+        def setter(raw_password):
+            self.set_password(raw_password)
+            # Password hash upgrades shouldn't be considered password changes.
+            self._password = None
+            self.save(update_fields=["password"])
+        return hashers.check_password(raw_password, self.password, setter)
+
     objects = UserManager()
 
     class Meta:
@@ -114,6 +133,7 @@ class Permission(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(verbose_name=u'权限名称', max_length=50)
     code = models.CharField(verbose_name=u'权限编码', unique=True, max_length=100)
+    is_menu = models.BooleanField(verbose_name=u'是否为菜单', default=False)
 
     objects = PermissionManager()
 
@@ -134,7 +154,7 @@ class Group(models.Model):
     title = models.CharField(verbose_name=u'用户组名称', max_length=20)
     permissions = models.ManyToManyField(
         'Permission',
-        verbose_name=u'权限列表',
+        verbose_name=u'用户组权限列表',
         blank=True,
     )
 
@@ -143,3 +163,25 @@ class Group(models.Model):
     class Meta:
         verbose_name = u'用户组'
         verbose_name_plural = u'用户组列表'
+
+
+class MenuManager(models.Manager):
+
+    def get_by_name(self, name):
+        return self.get(name=name)
+
+
+class Menu(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(verbose_name=u'菜单名称', max_length=20)
+    permissions = models.ManyToManyField(
+        'Permission',
+        verbose_name=u'菜单权限列表',
+        blank=True,
+    )
+
+    objects = MenuManager()
+
+    class Meta:
+        verbose_name = u'菜单'
+        verbose_name_plural = u'菜单列表'
