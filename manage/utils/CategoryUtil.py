@@ -24,7 +24,6 @@ class CategoryUtil(object):
             for item in list:
                 data = {'id': item.id, 'name': item.name, 'title': item.title, 'sort': item.sort, }
                 if id:
-                    print(level)
                     data['title'] = (level-1) * tag + data['title']
                 tree.append(data)
                 children = CategoryUtil.getCategoryList(module_id, item.id, level)
