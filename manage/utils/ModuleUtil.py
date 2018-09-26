@@ -5,7 +5,7 @@ class ModuleUtil(object):
 
     @staticmethod
     def getMatrixs():
-        return {'article': '文章', 'product': '商品'}
+        return {'article': '文章', 'product': '商品', 'picture': '图片'}
 
     @staticmethod
     def matrixIsExists(matrix):

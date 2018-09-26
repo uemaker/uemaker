@@ -164,6 +164,9 @@ class CategoryForm(forms.ModelForm):
         pid = kwargs.pop('pid', None)
         super(CategoryForm, self).__init__(*args, **kwargs)
         module_id = ModuleUtil.getModuleId(module_name)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            pid = instance.pk
         self.fields['pid'] = forms.ChoiceField(label=u'上级分类', initial=pid, widget=forms.Select(attrs={'class': 'form-control'}))
         trees = CategoryUtil.getCategoryTree(module_id, 0, '|')
         trees = [('0', '顶级分类')] + trees

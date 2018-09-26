@@ -97,6 +97,13 @@ class CategoryUpdateView(UpdateView):
 
         return super(CategoryUpdateView, self).form_valid(form)
 
+    def get_form_kwargs(self):
+        kw = super(CategoryUpdateView, self).get_form_kwargs()
+        kw.update({
+            'module_name': self.kwargs.get('module_name')
+        })
+        return kw
+
     def get_context_data(self, **kwargs):
         context = super(CategoryUpdateView, self).get_context_data(**kwargs)
         context['module_name'] = self.kwargs.get('module_name')
