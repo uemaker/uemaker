@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'corsheaders',
     'manage',
     'rbac',
+    'api',
     'DjangoUeditor',
 ]
 # 设置 Crispy 的样式主题
@@ -47,6 +49,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,13 +58,16 @@ MIDDLEWARE = [
     'rbac.middleware.auth.AuthMiddleware',
 ]
 
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080'
+)
+
 ROOT_URLCONF = 'uemaker.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'manage/templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'manage/templates',), os.path.join(BASE_DIR, 'blog/dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,9 +89,8 @@ WSGI_APPLICATION = 'uemaker.wsgi.application'
 
 RBAC = {
     'safe_urls': [
-        r'/login/',
-        '/manage/.*',
-        '^/rbac/',
+        '^/api/',
+        '^/rbac/login',
     ],
 }
 
@@ -145,6 +150,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     'rbac/static/',
+    os.path.join(BASE_DIR, "blog/dist/static"),
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')

@@ -21,7 +21,10 @@ class UserManager(models.Manager):
         return email
 
     def get_by_name(self, username):
-        return self.get(username=username)
+        try:
+            return self.get(username=username)
+        except User.DoesNotExist:
+            return None
 
     def _create_user(self, username, email, password, **extra_fields):
         if not username:

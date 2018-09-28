@@ -14,13 +14,14 @@ class AuthMiddleware(MiddlewareMixin):
             if re.match(each, request_url):
                 return None
 
-        permission_list = request.session.get('rbac_permission_list', [])
-        if not permission_list:
-            redirect('/rbac/login/')
+        permission_dict = request.session.get('rbac_authorized_permission', {})
+        if not permission_dict:
+            return redirect('/rbac/login/')
 
-        has_permission = False
-        for permission in permission_list:
-            regax = '^{0}$'.format(permission.get('code'))
+        # has_permission = False
+        has_permission = True
+        for code, permission in permission_dict.items():
+            regax = '^{0}$'.format(code)
             if re.match(regax, request_url):
                 has_permission = True
                 break

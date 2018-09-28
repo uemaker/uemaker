@@ -4,6 +4,7 @@ from django.contrib.auth import hashers
 
 from rbac import models
 
+
 class LoginForm(forms.Form):
 
     username = forms.CharField(
@@ -39,9 +40,12 @@ class LoginForm(forms.Form):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
         user = models.User.objects.get_by_name(username)
+        print(1111)
+        print(user)
         if username and password:
             if not user:
                 raise ValidationError('用户名不存在！')
             elif not user.check_password(password):
                 raise ValidationError('密码不正确！')
             self.user = user
+

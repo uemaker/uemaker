@@ -11,6 +11,9 @@ class BaseMatrixModel(object):
     def list_fields(self):
         raise NotImplementedError("list_fields is not implemented.")
 
+    def toDict(self):
+        return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
+
     class Meta:
         abstract = True
 

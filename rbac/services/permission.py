@@ -29,7 +29,7 @@ def load_permissions(request, user):
                 permission_dict[permission.get('pm_code')] = permission
                 key_arr.append(permission.get('pm_id'))
 
-    request.session['authorized_permission'] = permission_dict
+    request.session['rbac_authorized_permission'] = permission_dict
 
     menu_permission_list = Menu.objects.filter().annotate(
         pm_id=F("permissions__id"),
@@ -50,9 +50,9 @@ def load_permissions(request, user):
                     menu_permission_dict[menu_permission.get('name')] = [menu_permission]
                 key_arr.append(menu_permission.get('pm_id'))
 
-    request.session['authorized_menu'] = menu_permission_dict
+    request.session['rbac_authorized_menu'] = menu_permission_dict
 
-    print(request.session.get('authorized_menu'))
+    print(request.session.get('rbac_authorized_menu'))
 
 
 
