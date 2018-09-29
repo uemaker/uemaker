@@ -2,11 +2,14 @@
   <el-container class="is-vertical">
     <v-header></v-header>
     <el-main>
-      <ul id="article_list">
-        <li v-for="item in articleList">
-          {{ item.title }}
-        </li>
-      </ul>
+      <el-row  class="item-list" v-for="item in articleList" >
+        <el-col :xs="24" :sm="16" :md="16" :lg="20">
+          <a href="javascript:void(0);" @click="redirect(item)" >{{ item.title }}</a>
+        </el-col>
+        <el-col class="hidden-sm-and-down" :xs="0" :sm="8" :md="8" :lg="4">
+          <span style="float: right;">{{ item.create_time|moment("YYYY-MM-DD HH:mm") }}</span>
+        </el-col>
+      </el-row>
     </el-main>
   </el-container>
 </template>
@@ -29,7 +32,11 @@
         }).catch(function (err) {
           console.log(err)
         })
-      }
+      },
+      redirect:function(obj){
+        var id = obj.id
+        this.$router.push('/article/'+id);
+      },
     }
 
   }

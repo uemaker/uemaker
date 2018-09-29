@@ -11,6 +11,10 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/css/common.css'
 Vue.use(ElementUI)
+Vue.use(require('vue-moment'));
+
+import HeaderView from '@/components/v-header'
+Vue.component('v-header', HeaderView)
 
 /* eslint-disable no-new */
 new Vue({

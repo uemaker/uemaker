@@ -32,4 +32,11 @@ a:active {
 #app .el-main {
 	padding:0;
 }
+.item-list {
+  padding: 15px 10px;
+   border-bottom:1px solid #f4f4f4;
+}
+.article-content {
+  padding: 15px 20px;
+}
 

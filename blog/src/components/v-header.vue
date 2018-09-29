@@ -8,9 +8,9 @@
         <el-menu-item index="2-2">JAVA</el-menu-item>
         <el-menu-item index="2-3">PYTHON</el-menu-item>
       </el-submenu>
-      <el-menu-item index="3"><a href="/tech/">技术前沿</a></el-menu-item>
-      <el-menu-item index="4"><a href="/soa/">构构之路</a></el-menu-item>
-      <el-menu-item index="5"><a href="/pm/">项目管理</a></el-menu-item>
+      <el-menu-item index="3">技术前沿</el-menu-item>
+      <el-menu-item index="4">构构之路</el-menu-item>
+      <el-menu-item index="5">项目管理</el-menu-item>
     </el-menu>
     </el-header>
 </template>
