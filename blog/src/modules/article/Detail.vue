@@ -23,7 +23,7 @@
       getData() {
         var vm = this;
         var id = vm.$route.params.id
-        this.$http.get('http://182.254.148.13/api/article/detail/'+id+'/').then(function (res) {
+        this.$http.get('http://jszupu.com/api/article/detail/'+id+'/').then(function (res) {
           vm.data = res.data.data;
           console.log(vm.data);
         }).catch(function (err) {

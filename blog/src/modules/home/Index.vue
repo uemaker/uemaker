@@ -26,7 +26,7 @@
     }, methods: {
       getArticles() {
         var vm = this;
-        this.$http.get('http://182.254.148.13/api/article/list/').then(function (res) {
+        this.$http.get('http://jszupu.com/api/article/list/').then(function (res) {
           vm.articleList = res.data.data;
           console.log(vm.articleList);
         }).catch(function (err) {
