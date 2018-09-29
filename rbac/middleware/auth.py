@@ -14,6 +14,11 @@ class AuthMiddleware(MiddlewareMixin):
             if re.match(each, request_url):
                 return None
 
+        reg_manage = '^/manage/'
+        reg_rbac = '^/rbac/'
+        if not re.match(reg_manage, request_url) and not re.match(reg_rbac, request_url):
+            return None
+
         permission_dict = request.session.get('rbac_authorized_permission', {})
         if not permission_dict:
             return redirect('/rbac/login/')
