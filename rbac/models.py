@@ -6,6 +6,8 @@ from django.contrib.auth import hashers
 # Create your models here.
 from django.utils import timezone
 
+from manage.utils import FieldUtil
+
 
 class UserManager(models.Manager):
 
@@ -54,6 +56,32 @@ class UserManager(models.Manager):
             self._password = None
             self.save(update_fields=["password"])
         return hashers.check_password(raw_password, self.password, setter)
+
+    def update_user(self, user_id, **extra_fields):
+        user = self.get(id=user_id)
+        if user:
+            fileds = FieldUtil.getmodelfields(user, None)
+            for key in extra_fields:
+                if key in fileds:
+                    value = extra_fields[key]
+                    if key == 'username':
+                        value = self.model.normalize_username(value)
+                    if key == 'email':
+                        value = self.normalize_email(value)
+                    setattr(user, key, value)
+
+        # username = self.model.normalize_username(extra_fields.get('username'))
+        # email = self.normalize_email(extra_fields.get('email'))
+        # real_name = extra_fields.get('real_name')
+        # is_super = extra_fields.get('is_super', False)
+        # is_active = extra_fields.get('is_active', False)
+        # user.username = username
+        # user.real_name = real_name
+        # user.email = email
+        # user.is_super = is_super
+        # user.is_active = is_active
+        user.save(using=self._db)
+        return user
 
 
 class User(models.Model):

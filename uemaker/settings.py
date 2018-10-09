@@ -88,9 +88,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'uemaker.wsgi.application'
 
 RBAC = {
+    'admin_url': '/manage/',
     'safe_urls': [
         '^/api/',
-        '^/rbac/login',
+        '^/rbac/',
     ],
 }
 

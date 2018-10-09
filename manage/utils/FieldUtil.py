@@ -67,7 +67,10 @@ class FieldUtil(object):
     def getmodelfields(model, use_fields):
         _fileds = model._meta.fields
         fileds = {}
-        params = [f for f in _fileds if f.name in use_fields]
+        if use_fields:
+            params = [f for f in _fileds if f.name in use_fields]
+        else:
+            params = [f for f in _fileds]
         for i in params:
             fileds[i.name] = i.verbose_name
         return fileds
