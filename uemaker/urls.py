@@ -19,6 +19,7 @@ from django.views.generic import TemplateView
 import rbac.urls
 import manage.urls
 import api.urls
+import book.urls
 from django.views.static import serve
 from django.conf import settings
 
@@ -26,6 +27,7 @@ urlpatterns = [
     url(r'^manage/', include(manage.urls)),
     url(r'^rbac/', include(rbac.urls)),
     url(r'^api/', include(api.urls)),
+    url(r'^book/', include(book.urls)),
     url(r'^ueditor/', include('DjangoUeditor.urls')),
     url(r'^media/(?P<path>.*)', serve, {"document_root": settings.MEDIA_ROOT}),
     url(r'^$', TemplateView.as_view(template_name="index.html")),

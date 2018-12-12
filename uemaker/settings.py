@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'manage',
     'rbac',
     'api',
+    'book',
     'DjangoUeditor',
 ]
 # 设置 Crispy 的样式主题
