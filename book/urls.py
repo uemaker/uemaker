@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.urls import include
+
 from . import views
 
 urlpatterns = [
@@ -8,4 +10,5 @@ urlpatterns = [
     url(r'^chapters/(?P<bid>\d+)/$', views.ChapterListView.as_view(), name='chapters'),
     url(r'^add_chapter/(?P<bid>\d+)/$', views.ChapterCreateView.as_view(), name='add_chapter'),
     url(r'^edit_chapter/(?P<pk>\w+)/$', views.ChapterUpdateView.as_view(), name='edit_chapter'),
+    url(r'^search/', include('haystack.urls')),
 ]

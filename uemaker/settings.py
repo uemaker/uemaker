@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'api',
     'book',
     'DjangoUeditor',
+    'haystack',
 ]
 # 设置 Crispy 的样式主题
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
@@ -68,7 +69,7 @@ ROOT_URLCONF = 'uemaker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'manage/templates',), os.path.join(BASE_DIR, 'blog/dist')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'manage/templates',), os.path.join(BASE_DIR, 'blog/dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,6 +96,22 @@ RBAC = {
         '^/rbac/',
     ],
 }
+
+# 全文检索框架配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 使用whoosh引擎
+        # 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'ENGINE': 'book.whoosh_cn_backend.WhooshEngine',
+        # 索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+# 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 6  # 指定搜索结果每页显示多少条信息
 
 
 # Database
